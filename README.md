@@ -1,2 +1,3 @@
 # zenie
-An AI that makes your money journey fun
+
+A note taking app
