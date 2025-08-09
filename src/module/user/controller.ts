@@ -19,20 +19,20 @@ class UserController {
   }
 
   async get(req: Request, res: Response) {
-    const { id } = req.params;
+    const id = req.user?.id;
     const user = await userService.getUserById(id!);
     return res.status(user.statusCode).json(user);
   }
 
   async update(req: Request, res: Response) {
-    const { id } = req.params;
+    const id = req.user?.id;
     const { name, email } = req.body;
     const user = await userService.update(id!, { name, email });
     return res.status(user.statusCode).json(user);
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params;
+    const id = req.user?.id;
     const user = await userService.delete(id!);
     return res.status(user.statusCode).json(user);
   }

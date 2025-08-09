@@ -12,6 +12,5 @@ authRouter
 userRouter
   .use(guard)
   .get("/", userController.get)
-  .get("/:id", userController.get)
-  .put("/:id", userController.update)
-  .delete("/:id", userController.delete);
+  .put("/", userController.update)
+  .delete("/", userController.delete);

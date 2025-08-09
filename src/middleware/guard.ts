@@ -6,7 +6,7 @@ import jwt, { type JwtPayload } from "jsonwebtoken";
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user?: { id: string; email: string };
     }
   }
 }
@@ -31,7 +31,9 @@ export const guard = (req: Request, res: Response, next: NextFunction) => {
     if (!decoded || typeof decoded === "string") {
       return res.status(403).json({ error: "Invalid token payload" });
     }
-    req.user = (decoded as TokenPayload).user;
+     const payload = decoded as TokenPayload;
+     
+    req.user = { id: payload.id, email: payload.email };
     next();
   });
 };
