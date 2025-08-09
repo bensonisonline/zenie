@@ -8,6 +8,20 @@
       "when": 1754689849887,
       "tag": "0000_secret_lucky_pierre",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1754735356656,
+      "tag": "0001_workable_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1754735438573,
+      "tag": "0002_workable_stingray",
+      "breakpoints": true
     }
   ]
 }

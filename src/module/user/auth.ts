@@ -53,13 +53,9 @@ class AuthService {
     const existing = await userRepository.getUserByEmail(data.email);
     if (existing) throw new ErrorResponse(400, "User with this email exists");
 
-    const date = new Date().toLocaleDateString();
-
     const hashedPassword = hashPassword(data.password);
     const user = await userRepository.create({
       ...data,
-      createdAt: date,
-      updatedAt: date,
       password: hashedPassword,
     });
 
