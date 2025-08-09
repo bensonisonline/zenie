@@ -1,44 +1,86 @@
 import { ErrorResponse, response } from "../utils";
 import { userRepository } from "./repository";
 import type { User } from "./schema";
+import { emailSchema, idSchema } from "./validation";
 
 class UserService {
+  static sanitize(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+  }
+
   async getUserById(id: string) {
-    if (!id) {
-      throw new Error("User ID is required");
+    const validate = idSchema.safeParse({ id });
+    if (!validate.success) {
+      const error = validate.error.flatten().fieldErrors.id;
+      if (error) {
+        throw new ErrorResponse(400, error[0] as string);
+      } else {
+        throw new ErrorResponse(400, "Unknown validation error");
+      }
     }
     const result = await userRepository.getUserById(id);
     if (!result) {
       throw new ErrorResponse(404, "User not found");
     }
-    return response(200, "User found", result);
+    const sanitize = UserService.sanitize(result);
+    return response(200, "User found", sanitize);
   }
 
   async getUserByEmail(email: string) {
-    if (!email) {
-      throw new Error("Email is required");
+    const validate = emailSchema.safeParse({ email });
+    if (!validate.success) {
+      const error = validate.error.flatten().fieldErrors.email;
+      if (error) {
+        throw new ErrorResponse(400, error[0] as string);
+      } else {
+        throw new ErrorResponse(400, "Unknown validation error");
+      }
     }
     const result = await userRepository.getUserByEmail(email);
     if (!result) {
       throw new ErrorResponse(404, "User not found");
     }
-    return response(200, "User found", result);
+    const sanitize = UserService.sanitize(result);
+    return response(200, "User found", sanitize);
   }
 
   async update(id: string, data: Partial<User>) {
-    if (!id) {
-      throw new Error("User ID is required");
+    const validate = idSchema.safeParse({ id });
+    if (!validate.success) {
+      const error = validate.error.flatten().fieldErrors.id;
+      if (error) {
+        throw new ErrorResponse(400, error[0] as string);
+      } else {
+        throw new ErrorResponse(400, "Unknown validation error");
+      }
     }
-    const result = await userRepository.update(id, data);
+    const date = new Date().toLocaleDateString();
+    const result = await userRepository.update(id, {
+      ...data,
+      updatedAt: date,
+    });
     if (!result) {
       throw new ErrorResponse(404, "User not found");
     }
-    return response(200, "User updated", result);
+    const santize = UserService.sanitize(result);
+    return response(200, "User updated", santize);
   }
 
   async delete(id: string) {
-    if (!id) {
-      throw new Error("User ID is required");
+    const validate = idSchema.safeParse({ id });
+    if (!validate.success) {
+      const error = validate.error.flatten().fieldErrors.id;
+      if (error) {
+        throw new ErrorResponse(400, error[0] as string);
+      } else {
+        throw new ErrorResponse(400, "Unknown validation error");
+      }
     }
     const result = await userRepository.delete(id);
     if (!result) {

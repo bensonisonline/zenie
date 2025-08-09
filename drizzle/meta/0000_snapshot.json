@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "236e738d-cc5c-4181-a177-016c50c2df00",
+  "id": "e97823de-d5d1-4d6b-853f-c99d02b4d868",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -13,7 +13,7 @@
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false,
-          "default": "'de7f7f80-44ee-47b3-a579-1b4be0940d76'"
+          "default": "'e1917958-de46-47a2-806a-ba7d9ad9f75f'"
         },
         "name": {
           "name": "name",
@@ -35,6 +35,22 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'08/08/2025'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'08/08/2025'"
         }
       },
       "indexes": {

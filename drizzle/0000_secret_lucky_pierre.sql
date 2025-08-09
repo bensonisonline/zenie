@@ -1,8 +1,10 @@
 CREATE TABLE `users` (
-	`id` text PRIMARY KEY DEFAULT 'de7f7f80-44ee-47b3-a579-1b4be0940d76' NOT NULL,
+	`id` text PRIMARY KEY DEFAULT 'e1917958-de46-47a2-806a-ba7d9ad9f75f' NOT NULL,
 	`name` text NOT NULL,
 	`email` text NOT NULL,
-	`password` text NOT NULL
+	`password` text NOT NULL,
+	`created_at` text DEFAULT '08/08/2025',
+	`updated_at` text DEFAULT '08/08/2025'
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `users_id_unique` ON `users` (`id`);--> statement-breakpoint

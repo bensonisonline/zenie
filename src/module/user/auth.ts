@@ -1,14 +1,15 @@
 import jwt from "jsonwebtoken";
 import {
-    comparePassword,
-    ErrorResponse,
-    hashPassword,
-    response,
+  comparePassword,
+  ErrorResponse,
+  hashPassword,
+  response,
 } from "../utils";
 import { userRepository } from "./repository";
 import type { User } from "./schema";
 
 import "dotenv/config";
+import { loginSchema, registerSchema } from "./validation";
 
 class AuthService {
   static token(user: User) {
@@ -18,9 +19,17 @@ class AuthService {
       { expiresIn: "1d" }
     );
 
-    const santize: { name: string; email: string; token: string } = {
+    const santize: {
+      id: string;
+      name: string;
+      email: string;
+      createdAt: string | null;
+      token: string;
+    } = {
+      id: user.id,
       name: user.name,
       email: user.email,
+      createdAt: user.createdAt,
       token: accessToken,
     };
 
@@ -28,15 +37,29 @@ class AuthService {
   }
 
   async register(data: User) {
-    if (!(data.email, data.name, data.password))
-      throw new ErrorResponse(400, "All fields are required");
+    const { email, password, name } = data;
+
+    const validate = registerSchema.safeParse({ name, email, password });
+    if (!validate.success) {
+      const errors = validate.error.issues;
+
+      const errorMessages = errors.map((issue) => {
+        const field = issue.path.join(".");
+        return `${field}: ${issue.message}`;
+      });
+      throw new ErrorResponse(400, errorMessages.join(", "));
+    }
 
     const existing = await userRepository.getUserByEmail(data.email);
     if (existing) throw new ErrorResponse(400, "User with this email exists");
 
+    const date = new Date().toLocaleDateString();
+
     const hashedPassword = hashPassword(data.password);
     const user = await userRepository.create({
       ...data,
+      createdAt: date,
+      updatedAt: date,
       password: hashedPassword,
     });
 
@@ -48,6 +71,17 @@ class AuthService {
   }
 
   async login(email: string, password: string) {
+    const validate = loginSchema.safeParse({ email, password });
+    if (!validate.success) {
+      const errors = validate.error.issues;
+
+      const errorMessages = errors.map((issue) => {
+        const field = issue.path.join(".");
+        return `${field}: ${issue.message}`;
+      });
+      throw new ErrorResponse(400, errorMessages.join(", "));
+    }
+
     const user = await userRepository.getUserByEmail(email);
     if (!user) throw new ErrorResponse(400, "Invalid credentials");
 

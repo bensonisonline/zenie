@@ -6,6 +6,8 @@ export const user = sqliteTable("users", {
   name: text().notNull(),
   email: text().notNull().unique(),
   password: text().notNull(),
+  createdAt: text().default(new Date().toLocaleDateString()),
+  updatedAt: text().default(new Date().toLocaleDateString()),
 });
 
 export type User = typeof user.$inferSelect;
